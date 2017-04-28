@@ -1,5 +1,5 @@
 <?php
-namespace EDMRabbitPackage\Connector;
+namespace EDMRabbitPackage\Connectors;
 
 use EDMRabbitPackage\Exceptions\ResponseStatusNot200;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -119,8 +119,9 @@ class RabbitConnector
      */
     public function sendMessageWithResponse(array $body, $queue = "test")
     {
-        //CREO IL CORRELATION ID
+        //CREO IL CORRELATION UUID
         $corrId = sprintf ("%08X", sprintf("%03d%06d", rand(0,999), substr(time(), -6)));
+
         //CREO IL NOME DELLA CODA DI RISPOSTA
         $reply_to = 'FE_'.$corrId;
 
@@ -129,8 +130,7 @@ class RabbitConnector
         $ch = $c->channel();
 
         /*
-           name: $queue    // should be unique in fanout exchange. Let RabbitMQ create
-                           // a queue name for us
+           name: $queue    // should be unique in fanout exchange.
            passive: false  // don't check if a queue with the same name exists
            durable: false // the queue will not survive server restarts
            exclusive: true // the queue can not be accessed by other channels
@@ -141,13 +141,12 @@ class RabbitConnector
         $ch->queue_declare($reply_to, false, false, false, true);
 
 
-//        $ch->exchange_declare($reply_to, 'amq.direct', false, false, true);
         $ch->queue_bind($reply_to, 'amq.direct', $reply_to);
 
         /*
          * \\ AMQPMessage PROPS //
          *
-         *  correlation_id	    => ID_UNIVOCO_TRANSAZIONE (sarÃ  propagato a tutti i consumer) --> printf "%07X\n", (sprintf "%03d%05d", int(rand(1000)), substr(time, -5))
+         *  correlation_id	    => ID_UNIVOCO_TRANSAZIONE (sarà  propagato a tutti i consumer) --> printf "%07X\n", (sprintf "%03d%05d", int(rand(1000)), substr(time, -5))
          *  reply_to			=> CODA_RISPOSTA (RPC) ==> se si riutilizza il correlation_id specificare anche l'applicazione per evitare collisioni! ad es. FE_correlation_id
          *  type				=> {request|response}
          *  user_id			    => EDM_Username
@@ -188,7 +187,7 @@ class RabbitConnector
      * @return string
      * @throws ResponseStatusNot200
      */
-    public function receiveMessage($corrId)
+    public function consumeQueueFromCorrelationId($corrId)
     {
         //RICAVO IL NOME DELLA CODA
         $reply_to = 'FE_'.$corrId;

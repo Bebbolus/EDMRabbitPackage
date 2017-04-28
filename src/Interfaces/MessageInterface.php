@@ -1,10 +1,10 @@
 <?php
 
-namespace EDMRabbitPackage\Models;
+namespace EDMRabbitPackage\Interfaces;
 
-use EDMRabbitPackage\Connector\RabbitConnector;
+use EDMRabbitPackage\Connectors\RabbitConnector;
 
-class QMessage
+class MessageInterface
 {
     private $index;
     private $type;
@@ -22,7 +22,7 @@ class QMessage
     }
 
 
-    public function sendRealTimeMessage()
+    public function sendWithResponse()
     {
         $connector = new RabbitConnector();
         $corrId = $connector->sendMessageWithResponse([
@@ -32,10 +32,10 @@ class QMessage
             'request' => $this->request,
             'user' => $this->user
         ], "document");
-        return $connector->receiveMessage($corrId);
+        return $connector->consumeQueueFromCorrelationId($corrId);
     }
 
-    public function sendAsyncMessage()
+    public function send()
     {
         $connector = new RabbitConnector();
         $connector->sendMessage([
