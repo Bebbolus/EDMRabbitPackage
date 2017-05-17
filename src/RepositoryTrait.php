@@ -6,7 +6,6 @@ use EDMRabbitPackage\Interfaces\MessageInterface;
 
 trait RepositoryTrait
 {
-
     use ELSRepositoryTrait\RepositoryTrait;
 
     private function getUser()
@@ -33,7 +32,7 @@ trait RepositoryTrait
         try{
             return $message->sendWithResponse();
         }catch (\Exception $e){
-            dd($e);
+            dd($e->getMessage());
         }
     }
 
@@ -48,7 +47,7 @@ trait RepositoryTrait
         try{
             return $message->sendWithResponse();
         }catch (\Exception $e){
-            dd($e);
+            dd($e->getMessage());
         }
     }
 
@@ -71,7 +70,7 @@ trait RepositoryTrait
         try{
             return $message->sendWithResponse();
         }catch (\Exception $e){
-            dd($e);
+            dd($e->getMessage());
         }
     }
 
@@ -93,9 +92,19 @@ trait RepositoryTrait
         try{
             return $message->sendWithResponse();
         }catch (\Exception $e){
-            dd($e);
+            dd($e->getMessage());
         }
     }
+
+
+    /*
+     * action TBD:
+     *      - mail
+     *      - ocr
+     *      - get_versions
+     *      - read_versions
+     */
+
 
 
 }
