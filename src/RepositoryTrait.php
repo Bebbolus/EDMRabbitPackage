@@ -6,7 +6,7 @@ use EDMRabbitPackage\Interfaces\MessageInterface;
 
 trait RepositoryTrait
 {
-    use ELSRepositoryTrait\RepositoryTrait;
+    use \ELSRepositoryTrait\RepositoryTrait;
 
     private function getUser()
     {
