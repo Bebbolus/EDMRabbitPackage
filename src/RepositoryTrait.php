@@ -13,7 +13,7 @@ trait RepositoryTrait
         if(!auth()->check()){
             return 'GUEST';
         }else{
-            return auth()->user()->getUserName();
+            return auth()->user()->getUserEmail();
         }
     }
 

@@ -17,7 +17,7 @@ class RabbitConnector
 
     /**
      * RabbitConnector constructor.
-     */.
+     */
     public function __construct()
     {
         $this->host = \Config::get('rabbit.host');
