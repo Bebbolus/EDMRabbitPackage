@@ -3,6 +3,7 @@
 namespace EDMRabbitPackage;
 
 use EDMRabbitPackage\Interfaces\MessageInterface;
+use ElasticSessions\Exceptions\EntityNotUpdatedException;
 
 trait RepositoryTrait
 {
@@ -48,7 +49,7 @@ trait RepositoryTrait
         try{
             return $message->sendWithResponse();
         }catch (\Exception $e){
-            dd($e->getMessage());
+            throw new EntityNotUpdatedException();
         }
     }
 
@@ -71,7 +72,7 @@ trait RepositoryTrait
         try{
             return $message->sendWithResponse();
         }catch (\Exception $e){
-            dd($e->getMessage());
+            dd($e);
         }
     }
 
@@ -93,7 +94,7 @@ trait RepositoryTrait
         try{
             return $message->sendWithResponse();
         }catch (\Exception $e){
-            dd($e->getMessage());
+            dd($e);
         }
     }
 
