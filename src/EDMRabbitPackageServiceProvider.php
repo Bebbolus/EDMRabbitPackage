@@ -12,7 +12,9 @@ class ElasticSessionsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->publishes([
+            __DIR__ . '/Config' => config_path(),
+        ]);
     }
     /**
      * Register the application services.

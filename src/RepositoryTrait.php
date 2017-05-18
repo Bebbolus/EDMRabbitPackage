@@ -17,6 +17,7 @@ trait RepositoryTrait
         }
     }
 
+
     private function makeMessage($action, $attributes){
         return new MessageInterface($this->getIndexName(),$this->getTypeName(),$action,$attributes,$this->getUser());
     }
