@@ -186,7 +186,7 @@ class RabbitConnector
      * @return string
      * @throws ResponseStatusNot200
      */
-    public function     consumeQueueFromCorrelationId($corrId)
+    public function consumeQueueFromCorrelationId($corrId)
     {
         //RICAVO IL NOME DELLA CODA
         $reply_to = 'FE_'.$corrId;

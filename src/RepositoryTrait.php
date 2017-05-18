@@ -4,6 +4,8 @@ namespace EDMRabbitPackage;
 
 use EDMRabbitPackage\Interfaces\MessageInterface;
 use ElasticSessions\Exceptions\EntityNotUpdatedException;
+use ElasticSessions\Exceptions\EntityNotCreatedException;
+use ElasticSessions\Exceptions\EntityNotDeletedException;
 
 trait RepositoryTrait
 {
@@ -29,12 +31,12 @@ trait RepositoryTrait
         if(!isset($attributes['created_at'])) $attributes['created_at'] = time();
         else $attributes['created_at'] = strtotime($attributes['created_at']);
 
-        $message = $this->makeMessage('create',$this->attributes);
+        $message = $this->makeMessage('create',$attributes);
 
         try{
             return $message->sendWithResponse();
         }catch (\Exception $e){
-            dd($e->getMessage());
+            throw new EntityNotCreatedException();
         }
     }
 
@@ -72,7 +74,7 @@ trait RepositoryTrait
         try{
             return $message->sendWithResponse();
         }catch (\Exception $e){
-            dd($e);
+            throw new EntityNotDeletedException();
         }
     }
 
