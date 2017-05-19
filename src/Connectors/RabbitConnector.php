@@ -14,6 +14,7 @@ class RabbitConnector
     private $vhost;
     private $user;
     private $password;
+    private $timeout;
 
 
     /**
@@ -26,6 +27,7 @@ class RabbitConnector
         $this->vhost = \Config::get('rabbit.vhost');
         $this->user = \Config::get('rabbit.user');
         $this->password = \Config::get('rabbit.password');
+        $this->timeout = \Config::get('rabbit.timeout');
 
     }
 
@@ -192,7 +194,6 @@ class RabbitConnector
         //RICAVO IL NOME DELLA CODA
         $reply_to = 'FE_'.$corrId;
 
-        $timeout = 20;
         $c = $this->makeConnection();
         $ch = $c->channel();
         $messageReceived = '';
@@ -228,7 +229,7 @@ class RabbitConnector
 
         while(count($ch->callbacks)) {
             try{
-                $ch->wait(null, false, $timeout);
+                $ch->wait(null, false, $this->timeout);
             }catch(AMQPTimeoutException $e){
                 $ch->close();
                 $c->close();
