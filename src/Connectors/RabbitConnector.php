@@ -2,6 +2,7 @@
 namespace EDMRabbitPackage\Connectors;
 
 use EDMRabbitPackage\Exceptions\ResponseStatusNot200;
+use EDMRabbitPackage\Exceptions\TimeOutException;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -186,21 +187,18 @@ class RabbitConnector
      * @return string
      * @throws ResponseStatusNot200
      */
-    public function consumeQueueFromCorrelationId($corrId)
+    public function     consumeQueueFromCorrelationId($corrId)
     {
         //RICAVO IL NOME DELLA CODA
         $reply_to = 'FE_'.$corrId;
 
-        $start_time = time();
+        $timeout = 20;
         $c = $this->makeConnection();
         $ch = $c->channel();
         $messageReceived = '';
 
-        $callback = function($data) use (&$messageReceived, &$exit , $corrId, $start_time) {
+        $callback = function($data) use (&$messageReceived, &$exit , $corrId) {
             while($exit == 0) {
-                if ((time() - $start_time) > 30) {
-                    return false; // timeout, function took longer than 30 seconds
-                }
                 if($data->get('correlation_id') == $corrId ){
 //                    dd($data);
                     $messageReceived = json_decode($data->body);
@@ -227,8 +225,15 @@ class RabbitConnector
         $ch->basic_consume($reply_to, '', false, false, false, false, $callback);
 
         $exit = 0;
-        while(count($ch->callbacks) AND $exit == 0) {
-            $ch->wait();
+
+        while(count($ch->callbacks)) {
+            try{
+                $ch->wait(null, false, $timeout);
+            }catch(AMQPTimeoutException $e){
+                $ch->close();
+                $c->close();
+                throw new TimeOutException ($e);
+            }
         }
 
         $ch->close();
