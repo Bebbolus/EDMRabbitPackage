@@ -34,10 +34,11 @@ trait RepositoryTrait
         $message = $this->makeMessage('create',$attributes);
 
         try{
-            return $message->sendWithResponse();
+            $newId = $message->sendWithResponse();
         }catch (\Exception $e){
             throw new EntityNotCreatedException();
         }
+        return $this->find($newId);
     }
 
     public function update(array $attributes = [], array $options = [])

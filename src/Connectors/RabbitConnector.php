@@ -198,6 +198,7 @@ class RabbitConnector
         $ch = $c->channel();
         $messageReceived = '';
 
+        //this callback wait message untill exit == 0
         $callback = function($data) use (&$messageReceived, &$exit , $corrId) {
             while($exit == 0) {
                 if($data->get('correlation_id') == $corrId ){
@@ -227,7 +228,7 @@ class RabbitConnector
 
         $exit = 0;
 
-        while(count($ch->callbacks)) {
+        while(count($ch->callbacks) AND $exit == 0) {
             try{
                 $ch->wait(null, false, $this->timeout);
             }catch(AMQPTimeoutException $e){
