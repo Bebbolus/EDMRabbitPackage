@@ -242,6 +242,7 @@ class RabbitConnector
         $c->close();
 
         if($messageReceived->status != '200'){
+            \LOG::error('ERROR FROM BACKEND LISTNER: '.PHP_EOL.json_encode($messageReceived));
             throw new ResponseStatusNot200($messageReceived->errors);
         }
 
