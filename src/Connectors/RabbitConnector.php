@@ -3,6 +3,7 @@ namespace EDMRabbitPackage\Connectors;
 
 use EDMRabbitPackage\Exceptions\ResponseStatusNot200;
 use EDMRabbitPackage\Exceptions\TimeOutException;
+use Illuminate\Support\Facades\Log;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -242,7 +243,7 @@ class RabbitConnector
         $c->close();
 
         if($messageReceived->status != '200'){
-            \LOG::error('ERROR FROM BACKEND LISTNER: '.PHP_EOL.json_encode($messageReceived));
+            LOG::error('ERROR FROM BACKEND LISTNER: '.PHP_EOL.json_encode($messageReceived));
             throw new ResponseStatusNot200($messageReceived->errors);
         }
 
