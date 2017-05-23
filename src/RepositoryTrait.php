@@ -43,6 +43,8 @@ trait RepositoryTrait
 
     public function update(array $attributes = [], array $options = [])
     {
+        if(!isset($attributes['ID'])) $attributes['ID'] = $this->getElsId();
+
         $attributes['updated_at'] = time();
         if(!isset($attributes['created_at'])) $attributes['created_at'] = time();
         else $attributes['created_at'] = strtotime($attributes['created_at']);
@@ -52,6 +54,7 @@ trait RepositoryTrait
         try{
             return $message->sendWithResponse();
         }catch (\Exception $e){
+            dd($e);
             throw new EntityNotUpdatedException();
         }
     }
