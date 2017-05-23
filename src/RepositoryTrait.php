@@ -1,5 +1,4 @@
 <?php
-
 namespace EDMRabbitPackage;
 
 use EDMRabbitPackage\Interfaces\MessageInterface;
@@ -36,7 +35,7 @@ trait RepositoryTrait
         try{
             $newId = $message->sendWithResponse();
         }catch (\Exception $e){
-            throw new EntityNotCreatedException();
+            throw new EntityNotCreatedException($e->getMessage());
         }
         return $this->find($newId);
     }
@@ -54,8 +53,7 @@ trait RepositoryTrait
         try{
             return $message->sendWithResponse();
         }catch (\Exception $e){
-            dd($e);
-            throw new EntityNotUpdatedException();
+            throw new EntityNotUpdatedException($e->getMessage());
         }
     }
 
@@ -78,7 +76,7 @@ trait RepositoryTrait
         try{
             return $message->sendWithResponse();
         }catch (\Exception $e){
-            throw new EntityNotDeletedException();
+            throw new EntityNotDeletedException($e->getMessage());
         }
     }
 
