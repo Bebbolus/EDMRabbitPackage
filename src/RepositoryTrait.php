@@ -71,7 +71,8 @@ trait RepositoryTrait
 
     public function delete()
     {
-        $message = $this->makeMessage('delete',$this->attributes);
+        if(!isset($attributes['ID'])) $attributes['ID'] = $this->getElsId();
+        $message = $this->makeMessage('delete',$attributes);
 
         try{
             return $message->sendWithResponse();
