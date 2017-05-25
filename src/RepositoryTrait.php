@@ -26,7 +26,7 @@ trait RepositoryTrait
 
     public function create($attributes)
     {
-        $attributes['EDM_DELETED'] = 0;
+        $attributes['EDM_DELETED'] = 'DISABLED';
         $attributes['updated_at'] = time();
         if(!isset($attributes['created_at'])) $attributes['created_at'] = time();
         elseif(! is_numeric($attributes['created_at'] )) $attributes['created_at'] = strtotime($attributes['created_at']);
@@ -72,7 +72,7 @@ trait RepositoryTrait
 
     public function softDelete()
     {
-        $this->setAttribute('EDM_DELETED', 1);
+        $this->setAttribute('EDM_DELETED', 'ENABLED');
         $this->save();
     }
 
