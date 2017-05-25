@@ -26,6 +26,7 @@ trait RepositoryTrait
 
     public function create($attributes)
     {
+        $attributes['EDM_DELETED'] = false;
         $attributes['updated_at'] = time();
         if(!isset($attributes['created_at'])) $attributes['created_at'] = time();
         else $attributes['created_at'] = strtotime($attributes['created_at']);
@@ -69,6 +70,12 @@ trait RepositoryTrait
 
     }
 
+    public function softDelete()
+    {
+        $this->setAttribute('EDM_DELETED', false);
+        $this->save();
+    }
+
     public function delete()
     {
         if(!isset($attributes['ID'])) $attributes['ID'] = $this->getElsId();
@@ -80,37 +87,6 @@ trait RepositoryTrait
             throw new EntityNotDeletedException($e->getMessage());
         }
     }
-
-    /*
-     * Options can be:
-     * 'DOCUMENT_CODE'=> (string)$a->code,
-            'DOCUMENT_TITLE'=> (string)$a->code.'.pdf',
-                'DOCUMENT_MIME_TYPE' => 'application/pdf',
-                'USERNAME'
-                'USER_ID'
-                'REPOSITORY:
-                'PATH': '_SBDS_share',
-                'OCR': 0,1
-     */
-    public function notifyUpload($attributes)
-    {
-        $message = $this->makeMessage('notify_upload',$this->attributes);
-
-        try{
-            return $message->sendWithResponse();
-        }catch (\Exception $e){
-            dd($e);
-        }
-    }
-
-
-    /*
-     * action TBD:
-     *      - mail
-     *      - ocr
-     *      - get_versions
-     *      - read_versions
-     */
 
 
 
