@@ -72,7 +72,7 @@ trait RepositoryTrait
 
     public function softDelete()
     {
-        $this->setAttribute('EDM_DELETED', false);
+        $this->setAttribute('EDM_DELETED', true);
         $this->save();
     }
 
