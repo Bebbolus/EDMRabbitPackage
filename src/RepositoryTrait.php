@@ -29,7 +29,7 @@ trait RepositoryTrait
         $attributes['EDM_DELETED'] = false;
         $attributes['updated_at'] = time();
         if(!isset($attributes['created_at'])) $attributes['created_at'] = time();
-        else $attributes['created_at'] = strtotime($attributes['created_at']);
+        elseif(! is_numeric($attributes['created_at'] )) $attributes['created_at'] = strtotime($attributes['created_at']);
 
         $message = $this->makeMessage('create',$attributes);
 
@@ -47,7 +47,7 @@ trait RepositoryTrait
 
         $attributes['updated_at'] = time();
         if(!isset($attributes['created_at'])) $attributes['created_at'] = time();
-        else $attributes['created_at'] = strtotime($attributes['created_at']);
+        elseif(! is_numeric($attributes['created_at'] )) $attributes['created_at'] = strtotime($attributes['created_at']);
 
         $message = $this->makeMessage('update',$attributes);
 
@@ -87,7 +87,5 @@ trait RepositoryTrait
             throw new EntityNotDeletedException($e->getMessage());
         }
     }
-
-
 
 }
